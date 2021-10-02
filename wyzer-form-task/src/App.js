@@ -1,10 +1,10 @@
 import './App.css';
-import { Form } from '@formio/react';
+import BuildForm from './BuildForm';
 
 function App() {
   return (
-    <div className="App">
-      <Form src="https://examples.form.io/example" />
+    <div>
+      <BuildForm/>
     </div>
   );
 }
