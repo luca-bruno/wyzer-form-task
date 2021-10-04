@@ -4,8 +4,6 @@ import './App.css';
 
 function BuildForm() {
 
-    var stringifiedJsonSchema;
-
     const [saved, setSaved] = useState(false);
 
     // Save button trigger method
@@ -73,7 +71,7 @@ function BuildForm() {
     }).then((form) => {
         form.on("change", (e) => {
             // stringifying in order to pass data through LocalStorage
-            stringifiedJsonSchema = JSON.stringify(form.schema);
+            var stringifiedJsonSchema = JSON.stringify(form.schema);
             localStorage.setItem('localSave', stringifiedJsonSchema)
             console.log(localStorage.getItem('localSave'))
         });

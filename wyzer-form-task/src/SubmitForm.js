@@ -6,6 +6,7 @@ function SubmitForm() {
     // parsing stringified JSON data stored in LocalStorage
     let parsedJsonSchema = JSON.parse(localStorage.getItem('localSave'))
 
+    // Form renderer
     Formio.createForm(document.getElementById('formio'),
 
         parsedJsonSchema
