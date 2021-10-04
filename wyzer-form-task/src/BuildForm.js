@@ -1,13 +1,27 @@
-import React, { Component, useState, useEffect } from 'react'
-import { Formio, Form } from '@formio/react';
+import React, { useState, useEffect, PropsRoute } from 'react'
+import { Formio } from '@formio/react';
+import { BrowserRouter, Switch, Route, Link } from 'react-router-dom';
+import './App.css';
 
 function BuildForm(props) {
-    var saved = false;
+    var savedSchema = false;
+    var jsonSchema;
+    var stringifiedJsonSchema;
+
+    const [data, setData] = useState();
+    const [saved, setSaved] = useState(false);
 
     const saveForm = () => {
-        console.log(saved);
+
+        // console.log("JSONED" + jsonSchema)
+
+        setData(jsonSchema);
+        // console.log("locally-saved form JSON contents: " + data)
+        // console.log("data: " + data)
+        setSaved(true);
+
     };
-    
+
     // Form builder
     Formio.builder(document.getElementById('builder'), {}, {
         builder: {
@@ -56,48 +70,39 @@ function BuildForm(props) {
             data: false,
             premium: false
         }
-    }).then(function (form) {
-        form.on("change", function (e) {
-            saved = form.schema;
-            console.log(form.schema);
-            console.log(saved);
-            let jsonSchema = JSON.stringify(form.schema);
-            console.log(jsonSchema);
+    }).then((form) => {
+        form.on("change", (e) => {
+            jsonSchema = form.schema;
+            // console.log("SAVED SCHEMA IN THEN: " + savedSchema);
+            stringifiedJsonSchema = JSON.stringify(form.schema);
+            localStorage.setItem('localSave', stringifiedJsonSchema)
+            console.log(localStorage.getItem('localSave'))
 
 
-            // Save JSON file dialog
-            var blob = new Blob([jsonSchema], { type: 'text/plain' }),
-            anchor = document.createElement('a');
 
-            anchor.download = "hello.json";
-            anchor.href = (window.webkitURL || window.URL).createObjectURL(blob);
-            anchor.dataset.downloadurl = ['text/plain', anchor.download, anchor.href].join(':');
-            anchor.click();
-        });
-    })
-
-
-    Formio.createForm(document.getElementById('formio'), 'https://examples.form.io/example').then(function (form) {
-        // Defaults are provided as follows.
-        form.submission = {
-            data: {
-                firstName: 'Joe',
-                lastName: 'Smith'
-            }
-        };
-
-        form.on('submit', function (submission) {
-            console.log('Submission was made!', submission);
         });
     })
 
     return (
         <div>
             <div id="builder" ></div>
-            <button onClick={() => saveForm()}>Save</button>
+            <div className="custom-item">
+            <button onClick={() => saveForm()} className="custom-btn">Save</button>
+            </div>
+
+            <BrowserRouter>
+                {/* {saved ?
+                    <Link to="/submit">Submit a saved form</Link>
+                    : ""} */}
+
+                <Switch>
+                    {/* <Route exact path="/submit" render={(props) => <SubmitForm {...props} jsonData={data} />} /> */}
+                </Switch>
+            </BrowserRouter>
             <div id="formio" ></div>
+
         </div>
     )
 }
 
-export default BuildForm
+export default BuildForm;
